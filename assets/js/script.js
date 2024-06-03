@@ -29,18 +29,23 @@ function cityLatLon(searchCity) {
   return fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${searchCity}&appid=671277334815afdc86042e04b061da17`, {
   })
   .then(function (response) {
-    return response.json();
+    alert(response.statusText)
+    // return response.json();
   })
   .then(function(data) {
-    alert("hello hello")
     cityLat = data[0].lat;
     cityLon = data[0].lon;
     return {cityLat, cityLon}
-  // .catch
-  // need to catch typos
-  // should I also look for state? what to do if state field empty?
   })
-};
+  .catch(function(error) {
+    console.error('Error fetching data:', error);
+  })
+  .finally(() => {
+   console.log("jello")
+})
+}
+  // should I also look for state? what to do if state field empty?
+
 
 // the code as I wrote it
 // const searchButton = document.querySelector("#searchButton");
