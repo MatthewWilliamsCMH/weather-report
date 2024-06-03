@@ -1,0 +1,30 @@
+* {
+    font-family:"Alegreya", serif;
+}
+
+header {
+    text-align:center;
+    width:100%;
+    right:0;
+    left:0;
+    margin:auto;
+}
+
+main {
+    display:flex;
+    column-gap:20px;
+    border:1px solid blue;
+}
+
+#left-column {
+    width: 25%;
+    border:1px solid green;
+}
+
+form {
+    display:block;
+}
+#right-column {
+    width: 75%;
+    border:1px solid red;
+}
