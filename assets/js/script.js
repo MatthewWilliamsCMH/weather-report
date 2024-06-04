@@ -1,4 +1,6 @@
 const searchButton = document.querySelector("#searchButton");
+const dataList = document.querySelector("#oneDayCardEl");
+
 const searchList = [];
 let searchCity=""
 let oneDay = [];
@@ -20,31 +22,31 @@ function getLatLon(searchCity) {
   .then(function(data) {
     const cityLat = data[0].lat;
     const cityLon = data[0].lon;
-    getWeather(cityLat, cityLon);
+    getWeather(cityLat, cityLon)
   })
   .catch(function(error) {
     console.error('Error fetching data:', error);
-  });
+  })
 }
 
 function getWeather(lat, lon){
   fetch(`https:api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&cnt=5&mode=json&units=imperial&appid=671277334815afdc86042e04b061da17`, {
-  });
+  })
   .then (function(response) {
     return response.json();
-  });
+  })
   .then (function(data) {
     oneDay = data.list[0];
-    createOneDayCard(oneDay);
-  });
+    createOneDayCard(oneDay)
+  })
   .catch (function (error) {
     console.error("Error ", error);
-  });
+  })
   
 }
 
 function createOneDayCard() {
-  const searchDate = findDate();
+  const searchDate = findDate()
   
   const resultCard = document.createElement("oneDayCardEl");
   resultCard.classList.add("one-day-card");
@@ -53,16 +55,32 @@ function createOneDayCard() {
   cardTitle.textContent = `${searchCity} (${searchDate}) [icon]`;
   resultCard.append(cardTitle);
 
-  const cardText = document.createElement("ul");
-  cardText.textContent = "<li>Temp: " + oneDay.main.temp + "</li>\n" +
-  "<li>Humidity: " + oneDay.main.humidity + "</li>\n" +
-  "<li>Wind: " + oneDay.wind.speed + "</li>"
+  const cityTemp = document.createElement("li");
+  cityTemp.textContent = "Temp: " + oneDay.main.temp + "°";
+
+  const cityHumidity = document.createElement("li");
+  cityHumidity.textContent = "Humidity: " + oneDay.main.humidity + "%";
+
+  const cityWind = document.createElement("li");
+  cityWind.textContent = "Wind: " + oneDay.wind.speed + " mph";
   
-resultCard.append(cardText);
+  resultCard.appendChild(cityTemp)
+  resultCard.appendChild(cityHumidity)
+  resultCard.appendChild(cityWind)
+  
+  // const cardText = document.createElement("ul");
+  
+  
+
+  // cardText.textContent = "<li>Temp: " + oneDay.main.temp + "</li>\n" +
+  // "<li>Humidity: " + oneDay.main.humidity + "</li>\n" +
+  // "<li>Wind: " + oneDay.wind.speed + "</li>"
+  
+// resultCard.append(cardText);
 oneDayCardEl.append(resultCard);
 
-  console.log(oneDay);
-  console.log(searchCity);
+  console.log(oneDay)
+  console.log(searchCity)
 }
 
 function findDate() {
@@ -70,7 +88,7 @@ function findDate() {
   const currentYear = String(date.getFullYear());
   const currentMonth = String(date.getMonth() + 1);
   const currentDay = String(date.getDate());
-  curDate = `${currentMonth}/${currentDay}/${currentYear}`;
+  curDate = `${currentMonth}/${currentDay}/${currentYear}`
   return curDate;
 }
 // function createResultCard(resultItem) {
