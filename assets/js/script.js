@@ -5,49 +5,45 @@ let fiveDay = "";
 let cityLat = "";
 let cityLon = "";
 
-// the code with modifications suggested by Xpert Learning Assistant
-async function getForecast(searchCity) {
-  await cityLatLon(searchCity)
-    .then(({cityLat, cityLon}) => {
-      return fetch(`https:api.openweathermap.org/data/2.5/forecast?lat=${cityLat}&lon=${cityLon}&cnt=5&mode=json&units=imperial&appid=671277334815afdc86042e04b061da17`, {
-      })
-        .then (function(response) {
-          return response.json();
-        })
-       .then (function(data) {
-        alert(cityLat)
-        })
-      .catch (function (error) {
-        console.error("Error ", error);
-      })
-    })
-  };
+//can we remove this and just put coords into cityLatLon?
+function getForecast(searchCity) {
+  const coords = cityLatLon(searchCity)
+}
 
 function cityLatLon(searchCity) {
-  //the problem appears to be in this or the .then line. It looks like I'm getting no reply from the fetch, but all the codes say i do
-  //I'm not sure if the fetch response is empty or if the .then call can't read it.
-  return fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${searchCity}&appid=671277334815afdc86042e04b061da17`, {
+  fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${searchCity}&appid=671277334815afdc86042e04b061da17`, {
   })
   .then(function (response) {
-    alert(response.statusText)
-    // return response.json();
+    return response.json();
   })
   .then(function(data) {
     cityLat = data[0].lat;
     cityLon = data[0].lon;
-    return {cityLat, cityLon}
+    getWeather(cityLat, cityLon)
   })
   .catch(function(error) {
     console.error('Error fetching data:', error);
   })
-  .finally(() => {
-   console.log("jello")
-})
 }
-  // should I also look for state? what to do if state field empty?
+
+function getWeather(lat, lon){
+  fetch(`https:api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&cnt=5&mode=json&units=imperial&appid=671277334815afdc86042e04b061da17`, {
+  })
+  .then (function(response) {
+    return response.json();
+  })
+  .then (function(data) {
+    //do i need this .then at all?
+    console.log(data)
+  })
+  .catch (function (error) {
+    console.error("Error ", error);
+  })
+  }
+  
+// should I also look for state? what to do if state field empty?
 
 
-// the code as I wrote it
 // const searchButton = document.querySelector("#searchButton");
 // const searchList = [];
 // let oneDay = "";
@@ -86,6 +82,7 @@ function cityLatLon(searchCity) {
 // };
 
 searchButton.addEventListener("click", function(event) {
+  event.preventDefault()
   // test below for content other than letter, period, hyphen.
   const searchCity = document.querySelector("#searchInput").value;
   if (searchCity.trim()!== ""){ 
