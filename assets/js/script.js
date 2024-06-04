@@ -50,10 +50,15 @@ function createOneDayCard() {
   
   const resultCard = document.createElement("oneDayCardEl");
   resultCard.classList.add("one-day-card");
-
+  
   const cardTitle = document.createElement("h2");
-  cardTitle.textContent = `${searchCity} (${searchDate}) [icon]`;
+  cardTitle.textContent = `${searchCity} (${searchDate})`;
+  
+  const cardIcon = document.createElement("img");
+  cardIcon.setAttribute("src", `https://openweathermap.org/img/wn/${oneDay.weather[0].icon}@2x.png`)
+  
   resultCard.append(cardTitle);
+  resultCard.append(cardIcon);
 
   const cityTemp = document.createElement("li");
   cityTemp.textContent = "Temp: " + oneDay.main.temp + "°";
@@ -64,23 +69,12 @@ function createOneDayCard() {
   const cityWind = document.createElement("li");
   cityWind.textContent = "Wind: " + oneDay.wind.speed + " mph";
   
+  console.log(oneDay)
+
   resultCard.appendChild(cityTemp)
   resultCard.appendChild(cityHumidity)
   resultCard.appendChild(cityWind)
-  
-  // const cardText = document.createElement("ul");
-  
-  
-
-  // cardText.textContent = "<li>Temp: " + oneDay.main.temp + "</li>\n" +
-  // "<li>Humidity: " + oneDay.main.humidity + "</li>\n" +
-  // "<li>Wind: " + oneDay.wind.speed + "</li>"
-  
-// resultCard.append(cardText);
-oneDayCardEl.append(resultCard);
-
-  console.log(oneDay)
-  console.log(searchCity)
+  oneDayCardEl.append(resultCard);
 }
 
 function findDate() {
@@ -91,27 +85,11 @@ function findDate() {
   curDate = `${currentMonth}/${currentDay}/${currentYear}`
   return curDate;
 }
-// function createResultCard(resultItem) {
-//   const resultCard = document.createElement('div');
-//   resultCard.classList.add('result-card');
-
-//   const cardTitle = document.createElement('h3');
-//   cardTitle.textContent = resultItem.title;
-
-//   resultCard.append(cardTitle)
-
-//   const cardText = document.createElement('p');
-//   cardText.textContent = resultItem.description;
-
-//   resultCard.append(cardText);
-
-//   resultBox.append(resultCard);
-// }
-
-// should I also look for state? what to do if state field empty?
 
 searchButton.addEventListener("click", function(event) {
   event.preventDefault()
+  //Need to clear form on click and then repopulate
+
   // test below for content other than letter, period, hyphen.
   searchCity = document.querySelector("#searchInput").value;
   if (searchCity.trim()!== ""){ 
