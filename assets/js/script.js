@@ -8,15 +8,14 @@
 const searchButton = document.querySelector("#searchButton");
 const dataList = document.querySelector("#oneDayCardEl");
 const fullDate = new Date();
+const searchHistory = JSON.parse(localStorage.getItem("cityName")) || [];
+
 let curDate = ""
 let searchCity=""
 let oneDay = [];
 let fiveDays = [];
-
-
-// read city name and fetch http addresses from local Storage
-// display city name in left column on button that pulls the fetch request into the createCards routine
-const searchList = [];
+let weatherData = [];
+let shortList = [];
 
 function getToday (fullDate) {
   const month = (fullDate.getMonth() + 1).toString().padStart(2, '0');
@@ -48,17 +47,12 @@ function getWeather(lat, lon){
     return response.json();
   })
   .then (function(data) {
-    oneDay = data.list[0];
+    weatherData = data
+    oneDay = weatherData.list[0];
   
-  // I need to determine today's date then take noon or later for to date 
-  // then add one to the date and get noon
-  // then add one to the date and get noon
-  // then add one to the date and get noon
-  // then add one to the date nd get noon
-
   // in createFiveDaysCards function, iterate over the remaining array
   // to create four new cards
-    trimWeather(data)
+    trimWeather(weatherData)
     createOneDayCard(oneDay)
     createFiveDayCards(fiveDays)
   })
@@ -66,44 +60,28 @@ function getWeather(lat, lon){
     console.error("Error ", error);
   })
 }
+
 function trimWeather(data) {
-// compare ONLY the time in the data.list[i].dt_txt to see if it's 00:00:00
-// use the .filter function to remove data.list[i] if the result is false
-// compare ONLY the date in fullDate with ONLY the date in data.list[i].dt_txt;
-
-
-  // console.log(data)
-
-  for (let i = 0; i < data.list.length; i++) {
-    let checkTime = data.list[i].dt_txt.slice(-8); // return the last 8 characters, which should be the time in 00:00:00 format
-    if (checkTime !== "12:00:00") {
-      console.log("true")
-      console.log(i)
-      console.log(data)
-      delete data.list[i]
-      console.log("hello")
-      console.log(data)
-    }
-    // console.log(checkDate)
-    // console.log(fullDate)
-    // console.log(data.list[i].filter(checkDate !== fullDate.toTimeString()));
-  }
-  // const result = data.filter(item => item.list.dt_text.toTimeString() !== fullDate.toTimeString());
-  // console.log(result)
-//   for(let i = 0; i < data.length; i++)
-//     if (checkDate === fullDate) {
-//       if (checkDate .toTimeString() !== fullDate.toTimeString())
-//         data[i]
-//     }
+  shortList = weatherData.list.filter(function(el, elIndex) {
+  return elIndex == 0 || el.dt_txt.slice(-8) === "12:00:00"})
 }
 
-function createOneDayCard() {
-  const resultCard = document.createElement("oneDayCardEl");
-  resultCard.classList.add("one-day-card");
+function createCards() {
+  for (newCard of shortList)
+    if (newCard.indexOf === 0) {
+      cardNumber = "one"
+    else {
+      cardNumber = "five"
+    }
+  
+  const resultCard = document.createElement(`${cardNumber}oneDayCardEl`);
+  resultCard.classList.add(`${cardNumber}one-day-card`);
   
   const cardTitle = document.createElement("h2");
   cardTitle.textContent = `${searchCity} (${findDate()})`;
   
+  // continue replacing "oneDay" with the cardNumber variable—"one" for the first card, "five" for the subsequent cards
+
   const cardIcon = document.createElement("img");
   cardIcon.setAttribute("src", `https://openweathermap.org/img/wn/${oneDay.weather[0].icon}.png`)
   
@@ -111,7 +89,7 @@ function createOneDayCard() {
   resultCard.append(cardIcon);
 
   const cityTemp = document.createElement("li");
-  cityTemp.textContent = "Temp: " + oneDay.main.temp + "°";
+  cityTemp.textContent = Temp: " + oneDay.main.temp + "°";
 
   const cityHumidity = document.createElement("li");
   cityHumidity.textContent = "Humidity: " + oneDay.main.humidity + "%";
@@ -138,13 +116,26 @@ function findDate() {
   return curDate;
 }
 
+function writeHistory {
+  //unshift search city name to localStorage if it's not already in localStorage
+}
+
+function readHistory {
+
+}
+
+//on load, read from localStorage; if more than 10 entries, pop the last one
+
 searchButton.addEventListener("click", function(event) {
   event.preventDefault()
   //Need to clear form on click and then repopulate
 
   // test below for content other than letter, period, hyphen.
   searchCity = document.querySelector("#searchInput").value;
-  if (searchCity.trim()!== ""){ 
+  if (searchCity.trim()!== ""){
+    // readHistory();
+    // if searchCity is NOT in returned object, add it.
+    // localStorage.setItem("cityName", JSON.stringify(searchHistory)); // writes city name to local storage
     getLatLon(searchCity);
   } else {
     alert("Please provide a city name.")
