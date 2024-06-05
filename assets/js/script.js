@@ -6,14 +6,17 @@
 // create card 
 
 const searchButton = document.querySelector("#searchButton");
-const dataList = document.querySelector("#oneDayCardEl");
+const oneDayForecast = document.querySelector("#oneDayCardEl");
+const fiveDayForecast = document.querySelector("#fiveDayCardEl")
 const fullDate = new Date();
 const searchHistory = JSON.parse(localStorage.getItem("cityName")) || [];
+// let cardNumber="";
+// let cardNumberIndex="";
 
 let curDate = ""
 let searchCity=""
-let oneDay = [];
-let fiveDays = [];
+let oneDayArr = [];
+let fiveDayArr = [];
 let weatherData = [];
 let shortList = [];
 
@@ -47,14 +50,15 @@ function getWeather(lat, lon){
     return response.json();
   })
   .then (function(data) {
-    weatherData = data
-    oneDay = weatherData.list[0];
+    weatherData = data;
+    trimWeather(weatherData);
+    oneDayArr = shortList[0];
+    shortList.splice(0,1);
+    fiveDayArr=shortList
   
-  // in createFiveDaysCards function, iterate over the remaining array
-  // to create four new cards
-    trimWeather(weatherData)
-    createOneDayCard(oneDay)
-    createFiveDayCards(fiveDays)
+    // I would have like to create all the cards in one function, but I couldn't figure out how to write a variable into a function call like a createElement method
+    createOneDayCard(oneDayArr)
+    createFiveDayCards(fiveDayArr)
   })
   .catch (function (error) {
     console.error("Error ", error);
@@ -66,45 +70,80 @@ function trimWeather(data) {
   return elIndex == 0 || el.dt_txt.slice(-8) === "12:00:00"})
 }
 
-function createCards() {
-  for (newCard of shortList)
-    if (newCard.indexOf === 0) {
-      cardNumber = "one"
-    else {
-      cardNumber = "five"
-    }
-  
-  const resultCard = document.createElement(`${cardNumber}oneDayCardEl`);
-  resultCard.classList.add(`${cardNumber}one-day-card`);
-  
-  const cardTitle = document.createElement("h2");
-  cardTitle.textContent = `${searchCity} (${findDate()})`;
-  
-  // continue replacing "oneDay" with the cardNumber variable—"one" for the first card, "five" for the subsequent cards
 
+// function createResultCard(resultItem) {
+//   const resultCard = document.createElement('div');
+//   resultCard.classList.add('result-card');
+
+//   const cardTitle = document.createElement('h3');
+//   cardTitle.textContent = resultItem.title;
+
+//   resultCard.append(cardTitle)
+
+//   const cardText = document.createElement('p');
+//   cardText.textContent = resultItem.description;
+
+//   resultCard.append(cardText);
+
+//   resultBox.append(resultCard);
+// }
+
+
+
+
+function createOneDayCard(oneDayArr) {
+  const resultCard = document.getElementById("oneDayCardEl");
+  const cardTitle = document.createElement("h2");
   const cardIcon = document.createElement("img");
-  cardIcon.setAttribute("src", `https://openweathermap.org/img/wn/${oneDay.weather[0].icon}.png`)
-  
+  const dataList = document.getElementById("dataListEl")
+  const cityTemp = document.createElement("li");
+  const cityHumidity = document.createElement("li");
+  const cityWind = document.createElement("li");
+
+  cardTitle.textContent = `${searchCity} (${findDate()})`;
+  cardIcon.setAttribute("src", `https://openweathermap.org/img/wn/${oneDayArr.weather[0].icon}.png`)
+  cityTemp.textContent = `Temp: ${oneDayArr.main.temp}°`;
+  cityHumidity.textContent = `Humidity: ${oneDayArr.main.humidity}%`;
+  cityWind.textContent = `Wind: ${oneDayArr.wind.speed} mph`;
+
+  dataList.appendChild(cityTemp)
+  dataList.appendChild(cityHumidity)
+  dataList.appendChild(cityWind)
   resultCard.append(cardTitle);
   resultCard.append(cardIcon);
-
-  const cityTemp = document.createElement("li");
-  cityTemp.textContent = Temp: " + oneDay.main.temp + "°";
-
-  const cityHumidity = document.createElement("li");
-  cityHumidity.textContent = "Humidity: " + oneDay.main.humidity + "%";
-
-  const cityWind = document.createElement("li");
-  cityWind.textContent = "Wind: " + oneDay.wind.speed + " mph";
-  
-  resultCard.appendChild(cityTemp)
-  resultCard.appendChild(cityHumidity)
-  resultCard.appendChild(cityWind)
-  oneDayCardEl.append(resultCard);
+  resultCard.append(dataList)
 }
 
-function createFiveDayCards() {
- 
+  // need to create div and assign it class fiveDayCard around each group of data
+  // need to get the date from fiveDayArr for these
+  // I need to write the result cards into an array and then display each card.
+  const resultCard = document.getElementById("fiveDayCardEl");
+    function createFiveDayCards(fiveDayArr) {
+    for (i = 0; i < fiveDayArr.length; i++) {
+    const resultCard = document.createElement("div")
+    const cardTitle = document.createElement("h2");
+    const cardIcon = document.createElement("img");
+    const dataList = document.getElementById("fiveDayListEl")
+    const cityTemp = document.createElement("li");
+    const cityHumidity = document.createElement("li");
+    const cityWind = document.createElement("li");
+
+    resultCard.id = i
+    resultCard.classList.add("fiveDayCard")
+    cardTitle.textContent = `${searchCity} (${findDate()})`;
+    console.log(fiveDayArr[i].weather[0].icon)
+    cardIcon.setAttribute("src", `https://openweathermap.org/img/wn/${fiveDayArr[i].weather[0].icon}.png`)
+    cityTemp.textContent = `Temp: ${fiveDayArr[i].main.temp}°`;
+    cityHumidity.textContent = `Humidity: ${fiveDayArr[i].main.humidity}%`;
+    cityWind.textContent = `Wind: ${fiveDayArr[i].wind.speed} mph`;
+    
+    dataList.appendChild(cityTemp)
+    dataList.appendChild(cityHumidity)
+    dataList.appendChild(cityWind)
+    resultCard.append(cardTitle);
+    resultCard.append(cardIcon);
+    resultCard.append(dataList)
+  }
 }
 
 function findDate() {
@@ -116,11 +155,11 @@ function findDate() {
   return curDate;
 }
 
-function writeHistory {
+function writeHistory() {
   //unshift search city name to localStorage if it's not already in localStorage
 }
 
-function readHistory {
+function readHistory() {
 
 }
 
