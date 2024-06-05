@@ -4,14 +4,7 @@ const dataList = document.querySelector("#oneDayCardEl");
 const searchList = [];
 let searchCity=""
 let oneDay = [];
-let fiveDay = [];
-// let cityLat = "";
-// let cityLon = "";
-
-//can we remove this and just put coords into getLatLon?
-// function getForecast(searchCity) {
-//   const coords = getLatLon(searchCity)
-// }
+let fiveDays = [];
 
 function getLatLon(searchCity) {
   fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${searchCity}&appid=671277334815afdc86042e04b061da17`, {
@@ -37,25 +30,32 @@ function getWeather(lat, lon){
   })
   .then (function(data) {
     oneDay = data.list[0];
+  
+  // I need to determine today's date then take noon or later for to date 
+  // then add one to the date and get noon
+  // then add one to the date and get noon
+  // then add one to the date and get noon
+  // then add one to the date nd get noon
+
+  // in createFiveDaysCards function, iterate over the remaining array
+  // to create four new cards
     createOneDayCard(oneDay)
+    createFiveDayCards(fiveDays)
   })
   .catch (function (error) {
     console.error("Error ", error);
   })
-  
 }
 
 function createOneDayCard() {
-  const searchDate = findDate()
-  
   const resultCard = document.createElement("oneDayCardEl");
   resultCard.classList.add("one-day-card");
   
   const cardTitle = document.createElement("h2");
-  cardTitle.textContent = `${searchCity} (${searchDate})`;
+  cardTitle.textContent = `${searchCity} (${findDate()})`;
   
   const cardIcon = document.createElement("img");
-  cardIcon.setAttribute("src", `https://openweathermap.org/img/wn/${oneDay.weather[0].icon}@2x.png`)
+  cardIcon.setAttribute("src", `https://openweathermap.org/img/wn/${oneDay.weather[0].icon}.png`)
   
   resultCard.append(cardTitle);
   resultCard.append(cardIcon);
@@ -77,12 +77,16 @@ function createOneDayCard() {
   oneDayCardEl.append(resultCard);
 }
 
+function createFiveDayCards() {
+ 
+}
+
 function findDate() {
-  const date = new Date();
-  const currentYear = String(date.getFullYear());
-  const currentMonth = String(date.getMonth() + 1);
-  const currentDay = String(date.getDate());
-  curDate = `${currentMonth}/${currentDay}/${currentYear}`
+  let currentDate = new Date();
+  const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+  const day = currentDate.getDate().toString().padStart(2, '0');
+  const year = currentDate.getFullYear();
+  curDate = `${month}/${day}/${year}`;
   return curDate;
 }
 
