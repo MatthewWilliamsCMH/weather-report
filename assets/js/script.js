@@ -117,12 +117,14 @@ function createOneDayCard(oneDayArr) {
   // need to create div and assign it class fiveDayCard around each group of data
   // need to get the date from fiveDayArr for these
   // I need to write the result cards into an array and then display each card.
-  const resultCard = document.getElementById("fiveDayCardEl");
-    function createFiveDayCards(fiveDayArr) {
-    for (i = 0; i < fiveDayArr.length; i++) {
-    const resultCard = document.createElement("div")
+function createFiveDayCards(fiveDayArr) {
+  const resultCards = document.getElementById("fiveDayCardEl");
+  for (i = 0; i < fiveDayArr.length; i++) {
+    const resultCard = document.createElement("card")
     const cardTitle = document.createElement("h2");
     const cardIcon = document.createElement("img");
+    //I may need to add this class to the resultCard, or perhaps I need to change this to 
+    // fiveDayCardEl (the div)
     const dataList = document.getElementById("fiveDayListEl")
     const cityTemp = document.createElement("li");
     const cityHumidity = document.createElement("li");
@@ -131,18 +133,18 @@ function createOneDayCard(oneDayArr) {
     resultCard.id = i
     resultCard.classList.add("fiveDayCard")
     cardTitle.textContent = `${searchCity} (${findDate()})`;
-    console.log(fiveDayArr[i].weather[0].icon)
     cardIcon.setAttribute("src", `https://openweathermap.org/img/wn/${fiveDayArr[i].weather[0].icon}.png`)
     cityTemp.textContent = `Temp: ${fiveDayArr[i].main.temp}°`;
     cityHumidity.textContent = `Humidity: ${fiveDayArr[i].main.humidity}%`;
     cityWind.textContent = `Wind: ${fiveDayArr[i].wind.speed} mph`;
     
-    dataList.appendChild(cityTemp)
-    dataList.appendChild(cityHumidity)
-    dataList.appendChild(cityWind)
+    dataList.appendChild(cityTemp);
+    dataList.appendChild(cityHumidity);
+    dataList.appendChild(cityWind);
     resultCard.append(cardTitle);
     resultCard.append(cardIcon);
-    resultCard.append(dataList)
+    resultCard.append(dataList);
+    resultCards.append(resultCard);
   }
 }
 
