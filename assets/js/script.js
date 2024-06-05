@@ -76,7 +76,7 @@ function trimWeather(data) {
 
   for (let i = 0; i < data.list.length; i++) {
     let checkTime = data.list[i].dt_txt.slice(-8); // return the last 8 characters, which should be the time in 00:00:00 format
-    if (checkTime !== "00:00:00") {
+    if (checkTime !== "12:00:00") {
       console.log("true")
       console.log(i)
       console.log(data)
