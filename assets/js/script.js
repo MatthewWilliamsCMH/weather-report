@@ -1,31 +1,14 @@
-// get date
-// get lat and lon
-// get weather
-// write city name and fetch http address to the end of localStorage
-// filter weather to index[0] plus all the noon readings for dates after today
-// create card 
-
 const searchButton = document.querySelector("#searchButton");
 const oneDayForecast = document.querySelector("#oneDayCardEl");
 const fiveDayForecast = document.querySelector("#fiveDayCardEl")
-const fullDate = new Date();
-const searchHistory = JSON.parse(localStorage.getItem("cityName")) || [];
-// let cardNumber="";
-// let cardNumberIndex="";
 
+// let storedCities = JSON.parse(localStorage.getItem("cityName")) || [];
 let curDate = ""
 let searchCity=""
 let oneDayArr = [];
 let fiveDayArr = [];
 let weatherData = [];
 let shortList = [];
-
-// function getToday (fullDate) {
-//   const month = (fullDate.getMonth() + 1).toString().padStart(2, '0');
-//   const day = fullDate.getDate().toString().padStart(2, '0');
-//   const year = fullDate.getFullYear();
-//   curDate = `${month}/${day}/${year}`;
-// }
 
 function getLatLon(searchCity) {
   fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${searchCity}&appid=671277334815afdc86042e04b061da17`, {
@@ -75,7 +58,7 @@ function trimWeather(data) {
   const reportInterval = weatherData.list[1].dt_txt.slice(-8);
   const elDate = el.dt_txt.slice(0, el.dt_txt.length-9)
   const index0Date = weatherData.list[0].dt_txt.slice(0, el.dt_txt.length-9)
-  return elIndex === 0 || (elDate !== index0Date && el.dt_txt.slice(-8) === reportInterval)})
+  return (elIndex === 0 || elIndex === 39) || (elDate !== index0Date && el.dt_txt.slice(-8) === reportInterval)})
 }
 
 function createOneDayCard(oneDayArr) {
@@ -139,14 +122,6 @@ function findDate(myArray, i) {
   const trimmedDate = dateParts[2].slice(0, dateParts[2].length-9)
   const cardDate = `${dateParts[1]}-${trimmedDate}-${dateParts[0]}`
   return cardDate
-
-
-  // const currentDate = new Date();
-  // const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-  // const day = currentDate.getDate().toString().padStart(2, '0');
-  // const year = currentDate.getFullYear();
-  // curDate = `${month}/${day}/${year}`;
-  // return curDate;
 }
 
 function incrementDate() {
@@ -157,11 +132,65 @@ function incrementDate() {
 
 function writeHistory() {
   //unshift search city name to localStorage if it's not already in localStorage
+  // const searchHistory = JSON.parse(localStorage.getItem("cityName"))
+  storedCities = JSON.parse(localStorage.getItem("cityName")) || [];
+  // array.includes(item, fromIndex)
+  // if (storedCities !== null) {
+    if (!storedCities.includes(searchCity.toLowerCase(), 0)) {
+      storedCities.unshift(searchCity.toLowerCase());
+      // storedCitiesStr = JSON.stringify(storedCities);
+      localStorage.setItem("cityName", JSON.stringify(storedCities));
+      readHistory();
+    // }
+  }
 }
 
 function readHistory() {
+  searchHistoryEl = document.getElementById("searchHistoryEl")
+  const storedCities = JSON.parse(localStorage.getItem("cityName")) || [];
 
+  for (let city of storedCities) {
+    searchCity = city
+    const btn = document.createElement("button");
+    
+    btn.textContent = searchCity;
+    btn.id = searchCity;
+    btn.setAttribute("type", "button");
+
+    searchHistoryEl.appendChild(btn);
+
+    btn.addEventListener("click", function(event) {
+      searchCity = event.target.id;
+      getLatLon(searchCity)}
+    );
+  }
 }
+
+  // function readHistory() {
+  //   const searchHistoryBox = document.getElementById("searchHistoryEl")
+  //   const forecastBox = document.getElementById("right-column")
+  //   searchHistoryBox.innerHTML=""; //clear the list
+  //   forecastBox.innerHTML=""; //clear the list
+  
+  //   searchHistoryEl = document.getElementById("searchHistoryEl")
+  //   const storedCities = JSON.parse(localStorage.getItem("cityName")) || [];
+  
+  //   for (let city of storedCities) {
+  //     searchCity = city
+  //     const btn = document.createElement("button");
+      
+  //     btn.textContent = searchCity;
+  //     btn.id = searchCity;
+  //     btn.setAttribute("type", "button");
+  
+  //     searchHistoryEl.appendChild(btn);
+  
+  //     btn.addEventListener("click", function(event) {
+  //       searchCity = event.target.id;
+  //       getLatLon(searchCity)}
+  //     );
+  //   }
+//  }
 
 //on load, read from localStorage; if more than 10 entries, pop the last one
 
@@ -175,9 +204,12 @@ searchButton.addEventListener("click", function(event) {
     // readHistory();
     // if searchCity is NOT in returned object, add it.
     // localStorage.setItem("cityName", JSON.stringify(searchHistory)); // writes city name to local storage
+    writeHistory();
     getLatLon(searchCity);
   } else {
     alert("Please provide a city name.")
     return;
   }
 });
+
+document.addEventListener("onload", readHistory())
