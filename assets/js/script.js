@@ -116,11 +116,6 @@ function findDate(myArray, i) {
   return cardDate
 }
 
-function incrementDate() {
-    let nextDate = new Date(findDate())
-    nextDate.setDate(nextDate.getDate() + i + 1)
-}
-
 function writeHistory() {
   storedCities = JSON.parse(localStorage.getItem("cityName")) || [];
     if (!storedCities.includes(searchCity.toLowerCase(), 0)) {
@@ -132,7 +127,8 @@ function writeHistory() {
 }
 
 function readHistory() {
-  searchHistoryEl = document.getElementById("searchHistoryEl")
+  document.getElementById("searchHistoryEl").innerHTML=""
+
   const storedCities = JSON.parse(localStorage.getItem("cityName")) || [];
 
   for (let city of storedCities) {
@@ -148,6 +144,7 @@ function readHistory() {
     btn.addEventListener("click", function(event) {
       document.getElementById("oneDayCardEl").innerHTML=""
       document.getElementById("fiveDayCardsEl").innerHTML=""
+      document.getElementById("searchInput").innerHTML=""
       searchCity = event.target.id;
       getLatLon(searchCity)}
     );
@@ -156,9 +153,9 @@ function readHistory() {
 
 searchButton.addEventListener("click", function(event) {
   event.preventDefault()
-  document.getElementById("searchHistoryEl").innerHTML=""
   document.getElementById("oneDayCardEl").innerHTML=""
   document.getElementById("fiveDayCardsEl").innerHTML=""
+  document.getElementById("searchInput").innerHTML=""
 
   // test below for content other than letter, period, hyphen.
   searchCity = document.querySelector("#searchInput").value;
