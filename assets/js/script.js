@@ -65,7 +65,7 @@ function createOneDayCard(oneDayArr) {
   const resultCard = document.getElementById("oneDayCardEl");
   const cardTitle = document.createElement("h2");
   const cardIcon = document.createElement("img");
-  const dataList = document.getElementById("dataListEl")
+  const dataList = document.createElement("ul")
   const cityTemp = document.createElement("li");
   const cityHumidity = document.createElement("li");
   const cityWind = document.createElement("li");
@@ -98,9 +98,7 @@ function createFiveDayCards(fiveDayArr) {
     resultCards.classList.add("fiveDayCards")
     resultCard.id = i
     resultCard.classList.add("fiveDayCard")
-    // todayDate.setDate(todayDate.getDate() + 1)
     cardTitle.textContent = `${searchCity} (${findDate(fiveDayArr[i])})`;
-    // cardTitle.textContent = `${searchCity} (${findDate()})`;
     cardIcon.setAttribute("src", `https://openweathermap.org/img/wn/${fiveDayArr[i].weather[0].icon}.png`)
     cityTemp.textContent = `Temp: ${fiveDayArr[i].main.temp}°`;
     cityHumidity.textContent = `Humidity: ${fiveDayArr[i].main.humidity}%`;
@@ -160,6 +158,8 @@ function readHistory() {
     searchHistoryEl.appendChild(btn);
 
     btn.addEventListener("click", function(event) {
+      document.getElementById("oneDayCardEl").innerHTML=""
+      document.getElementById("fiveDayCardsEl").innerHTML=""
       searchCity = event.target.id;
       getLatLon(searchCity)}
     );
@@ -196,7 +196,10 @@ function readHistory() {
 
 searchButton.addEventListener("click", function(event) {
   event.preventDefault()
-  //Need to clear form on click and then repopulate
+  document.getElementById("searchHistoryEl").innerHTML=""
+  document.getElementById("searchHistoryEl").innerHTML=""
+  document.getElementById("oneDayCardEl").innerHTML=""
+  document.getElementById("fiveDayCardsEl").innerHTML=""
 
   // test below for content other than letter, period, hyphen.
   searchCity = document.querySelector("#searchInput").value;
