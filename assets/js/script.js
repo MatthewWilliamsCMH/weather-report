@@ -20,12 +20,12 @@ let fiveDayArr = [];
 let weatherData = [];
 let shortList = [];
 
-function getToday (fullDate) {
-  const month = (fullDate.getMonth() + 1).toString().padStart(2, '0');
-  const day = fullDate.getDate().toString().padStart(2, '0');
-  const year = fullDate.getFullYear();
-  curDate = `${month}/${day}/${year}`;
-}
+// function getToday (fullDate) {
+//   const month = (fullDate.getMonth() + 1).toString().padStart(2, '0');
+//   const day = fullDate.getDate().toString().padStart(2, '0');
+//   const year = fullDate.getFullYear();
+//   curDate = `${month}/${day}/${year}`;
+// }
 
 function getLatLon(searchCity) {
   fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${searchCity}&appid=671277334815afdc86042e04b061da17`, {
@@ -54,9 +54,10 @@ function getWeather(lat, lon){
     trimWeather(weatherData);
     oneDayArr = shortList[0];
     shortList.splice(0,1);
-    fiveDayArr=shortList
+    fiveDayArr = shortList
   
-    // I would have like to create all the cards in one function, but I couldn't figure out how to write a variable into a function call like a createElement method
+    // I would have liked to create all the cards in one function, but I ran out of time 
+    // trying to make this work. Here, I settled for a less efficient solution.
     createOneDayCard(oneDayArr)
     createFiveDayCards(fiveDayArr)
   })
@@ -66,30 +67,16 @@ function getWeather(lat, lon){
 }
 
 function trimWeather(data) {
+  // Due to the five-day limit in the API, I have to take the time stamp for index[0]
+  // for the one-day forecast and then get the time-stamp value of the next element in the
+  // array as my filter to return an additional five days. Choosing to always use noon
+  // for example, will in certain conditions result in only four days of reportable data.
   shortList = weatherData.list.filter(function(el, elIndex) {
-  return elIndex == 0 || el.dt_txt.slice(-8) === "12:00:00"})
+  const reportInterval = weatherData.list[1].dt_txt.slice(-8);
+  const elDate = el.dt_txt.slice(0, el.dt_txt.length-9)
+  const index0Date = weatherData.list[0].dt_txt.slice(0, el.dt_txt.length-9)
+  return elIndex === 0 || (elDate !== index0Date && el.dt_txt.slice(-8) === reportInterval)})
 }
-
-
-// function createResultCard(resultItem) {
-//   const resultCard = document.createElement('div');
-//   resultCard.classList.add('result-card');
-
-//   const cardTitle = document.createElement('h3');
-//   cardTitle.textContent = resultItem.title;
-
-//   resultCard.append(cardTitle)
-
-//   const cardText = document.createElement('p');
-//   cardText.textContent = resultItem.description;
-
-//   resultCard.append(cardText);
-
-//   resultBox.append(resultCard);
-// }
-
-
-
 
 function createOneDayCard(oneDayArr) {
   const resultCard = document.getElementById("oneDayCardEl");
@@ -100,7 +87,7 @@ function createOneDayCard(oneDayArr) {
   const cityHumidity = document.createElement("li");
   const cityWind = document.createElement("li");
 
-  cardTitle.textContent = `${searchCity} (${findDate()})`;
+  cardTitle.textContent = `${searchCity} (${findDate(oneDayArr)})`;
   cardIcon.setAttribute("src", `https://openweathermap.org/img/wn/${oneDayArr.weather[0].icon}.png`)
   cityTemp.textContent = `Temp: ${oneDayArr.main.temp}°`;
   cityHumidity.textContent = `Humidity: ${oneDayArr.main.humidity}%`;
@@ -114,25 +101,23 @@ function createOneDayCard(oneDayArr) {
   resultCard.append(dataList)
 }
 
-  // need to create div and assign it class fiveDayCard around each group of data
-  // need to get the date from fiveDayArr for these
-  // I need to write the result cards into an array and then display each card.
 function createFiveDayCards(fiveDayArr) {
-  const resultCards = document.getElementById("fiveDayCardEl");
+  const resultCards = document.getElementById("fiveDayCardsEl");
   for (i = 0; i < fiveDayArr.length; i++) {
     const resultCard = document.createElement("card")
     const cardTitle = document.createElement("h2");
     const cardIcon = document.createElement("img");
-    //I may need to add this class to the resultCard, or perhaps I need to change this to 
-    // fiveDayCardEl (the div)
-    const dataList = document.getElementById("fiveDayListEl")
+    const dataList = document.createElement("ul")
     const cityTemp = document.createElement("li");
     const cityHumidity = document.createElement("li");
     const cityWind = document.createElement("li");
 
+    resultCards.classList.add("fiveDayCards")
     resultCard.id = i
     resultCard.classList.add("fiveDayCard")
-    cardTitle.textContent = `${searchCity} (${findDate()})`;
+    // todayDate.setDate(todayDate.getDate() + 1)
+    cardTitle.textContent = `${searchCity} (${findDate(fiveDayArr[i])})`;
+    // cardTitle.textContent = `${searchCity} (${findDate()})`;
     cardIcon.setAttribute("src", `https://openweathermap.org/img/wn/${fiveDayArr[i].weather[0].icon}.png`)
     cityTemp.textContent = `Temp: ${fiveDayArr[i].main.temp}°`;
     cityHumidity.textContent = `Humidity: ${fiveDayArr[i].main.humidity}%`;
@@ -148,14 +133,27 @@ function createFiveDayCards(fiveDayArr) {
   }
 }
 
-function findDate() {
-  let currentDate = new Date();
-  const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-  const day = currentDate.getDate().toString().padStart(2, '0');
-  const year = currentDate.getFullYear();
-  curDate = `${month}/${day}/${year}`;
-  return curDate;
+function findDate(myArray, i) {
+  const dateStr = myArray.dt_txt
+  const dateParts = dateStr.split("-")
+  const trimmedDate = dateParts[2].slice(0, dateParts[2].length-9)
+  const cardDate = `${dateParts[1]}-${trimmedDate}-${dateParts[0]}`
+  return cardDate
+
+
+  // const currentDate = new Date();
+  // const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+  // const day = currentDate.getDate().toString().padStart(2, '0');
+  // const year = currentDate.getFullYear();
+  // curDate = `${month}/${day}/${year}`;
+  // return curDate;
 }
+
+function incrementDate() {
+    let nextDate = new Date(findDate())
+    nextDate.setDate(nextDate.getDate() + i + 1)
+}
+
 
 function writeHistory() {
   //unshift search city name to localStorage if it's not already in localStorage
