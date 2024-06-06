@@ -2,8 +2,6 @@ const searchButton = document.querySelector("#searchButton");
 const oneDayForecast = document.querySelector("#oneDayCardEl");
 const fiveDayForecast = document.querySelector("#fiveDayCardEl")
 
-// let storedCities = JSON.parse(localStorage.getItem("cityName")) || [];
-let curDate = ""
 let searchCity=""
 let oneDayArr = [];
 let fiveDayArr = [];
@@ -50,10 +48,6 @@ function getWeather(lat, lon){
 }
 
 function trimWeather(data) {
-  // Due to the five-day limit in the API, I have to take the time stamp for index[0]
-  // for the one-day forecast and then get the time-stamp value of the next element in the
-  // array as my filter to return an additional five days. Choosing to always use noon
-  // for example, will in certain conditions result in only four days of reportable data.
   shortList = weatherData.list.filter(function(el, elIndex) {
   const reportInterval = weatherData.list[1].dt_txt.slice(-8);
   const elDate = el.dt_txt.slice(0, el.dt_txt.length-9)
@@ -127,16 +121,10 @@ function incrementDate() {
     nextDate.setDate(nextDate.getDate() + i + 1)
 }
 
-
 function writeHistory() {
-  //unshift search city name to localStorage if it's not already in localStorage
-  // const searchHistory = JSON.parse(localStorage.getItem("cityName"))
   storedCities = JSON.parse(localStorage.getItem("cityName")) || [];
-  // array.includes(item, fromIndex)
-  // if (storedCities !== null) {
     if (!storedCities.includes(searchCity.toLowerCase(), 0)) {
       storedCities.unshift(searchCity.toLowerCase());
-      // storedCitiesStr = JSON.stringify(storedCities);
       localStorage.setItem("cityName", JSON.stringify(storedCities));
       readHistory();
     // }
@@ -148,11 +136,11 @@ function readHistory() {
   const storedCities = JSON.parse(localStorage.getItem("cityName")) || [];
 
   for (let city of storedCities) {
-    searchCity = city
+    inputCity = city
     const btn = document.createElement("button");
     
-    btn.textContent = searchCity;
-    btn.id = searchCity;
+    btn.textContent = inputCity;
+    btn.id = inputCity;
     btn.setAttribute("type", "button");
 
     searchHistoryEl.appendChild(btn);
@@ -166,37 +154,8 @@ function readHistory() {
   }
 }
 
-  // function readHistory() {
-  //   const searchHistoryBox = document.getElementById("searchHistoryEl")
-  //   const forecastBox = document.getElementById("right-column")
-  //   searchHistoryBox.innerHTML=""; //clear the list
-  //   forecastBox.innerHTML=""; //clear the list
-  
-  //   searchHistoryEl = document.getElementById("searchHistoryEl")
-  //   const storedCities = JSON.parse(localStorage.getItem("cityName")) || [];
-  
-  //   for (let city of storedCities) {
-  //     searchCity = city
-  //     const btn = document.createElement("button");
-      
-  //     btn.textContent = searchCity;
-  //     btn.id = searchCity;
-  //     btn.setAttribute("type", "button");
-  
-  //     searchHistoryEl.appendChild(btn);
-  
-  //     btn.addEventListener("click", function(event) {
-  //       searchCity = event.target.id;
-  //       getLatLon(searchCity)}
-  //     );
-  //   }
-//  }
-
-//on load, read from localStorage; if more than 10 entries, pop the last one
-
 searchButton.addEventListener("click", function(event) {
   event.preventDefault()
-  document.getElementById("searchHistoryEl").innerHTML=""
   document.getElementById("searchHistoryEl").innerHTML=""
   document.getElementById("oneDayCardEl").innerHTML=""
   document.getElementById("fiveDayCardsEl").innerHTML=""
@@ -204,9 +163,6 @@ searchButton.addEventListener("click", function(event) {
   // test below for content other than letter, period, hyphen.
   searchCity = document.querySelector("#searchInput").value;
   if (searchCity.trim()!== ""){
-    // readHistory();
-    // if searchCity is NOT in returned object, add it.
-    // localStorage.setItem("cityName", JSON.stringify(searchHistory)); // writes city name to local storage
     writeHistory();
     getLatLon(searchCity);
   } else {
