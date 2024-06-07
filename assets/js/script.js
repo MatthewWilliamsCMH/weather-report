@@ -89,10 +89,10 @@ function createFiveDayCards(fiveDayArr) {
     const cityHumidity = document.createElement("li");
     const cityWind = document.createElement("li");
 
-    resultCards.classList.add("fiveDayCards")
-    resultCard.id = i
     resultCard.classList.add("fiveDayCard")
-    cardTitle.textContent = `${searchCity} (${findDate(fiveDayArr[i])})`;
+    resultCard.id = i
+    cardTitle.textContent = `${searchCity}
+(${findDate(fiveDayArr[i])})`;
     cardIcon.setAttribute("src", `https://openweathermap.org/img/wn/${fiveDayArr[i].weather[0].icon}.png`)
     cityTemp.textContent = `Temp: ${fiveDayArr[i].main.temp}°`;
     cityHumidity.textContent = `Humidity: ${fiveDayArr[i].main.humidity}%`;
@@ -137,6 +137,7 @@ function readHistory() {
     
     btn.textContent = inputCity;
     btn.id = inputCity;
+    btn.classList.add("btnHistory");
     btn.setAttribute("type", "button");
 
     searchHistoryEl.appendChild(btn);

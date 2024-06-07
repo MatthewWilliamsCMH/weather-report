@@ -1,34 +1,87 @@
+/* ---------- globals ---------- */
 * {
     font-family:"Alegreya", serif;
+    line-height:120%;
+    margin:0px;
 }
 
-header {
-    text-align:center;
-    width:100%;
-    right:0;
+body {
+    justify-items:center;
     left:0;
-    margin:auto;
+    right:0;
+    margin:20px auto;
+    max-width:980px;
+    background-color:#f3d8e8;
+}
+
+h1 {
+    margin-bottom:20px;
+    border-bottom:1px solid black;
+}
+
+h2 {
+    text-transform:capitalize;
 }
 
 main {
     display:flex;
     column-gap:20px;
-    border:1px solid blue;
 }
 
+ul {
+    list-style:none;
+    margin-left:0;
+    padding-left:0;
+
+}
+/* ---------- search history ---------- */
 #left-column {
-    width: 25%;
-    border:1px solid green;
+    width: 30%;
+    padding-right:20px;
+    border-right:1px solid black;
 }
 
 form {
     display:block;
 }
-#right-column {
-    width: 75%;
-    border:1px solid red;
+
+#searchInput {
+    margin-bottom:20px;
 }
 
-.one-day-card {
-    color:blue; 
+.btnHistory {
+    display:block;
+    margin-bottom:5px;
+    text-transform:capitalize;
+}
+
+/* ---------- forecasts ---------- */
+#right-column {
+    width: 80%;
+}
+
+#oneDayCardEl {
+    display:block;
+    margin-bottom:20px;
+}
+
+.one-day-card  h2 {
+    color:#0066a1; 
+}
+
+#fiveDayCardsEl {
+    display:flex;
+    gap:10px;
+}
+
+.fiveDayCard {
+    white-space:pre;
+    padding:10px;
+    background-color:#80d0ff;
+}
+
+#fiveDayCardsEl h2 {
+    text-align:center;
+    font-size:95%;
+    text-transform:capitalize;
 }
