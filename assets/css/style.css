@@ -6,6 +6,7 @@
 }
 
 body {
+    padding:0px 20px;
     justify-items:center;
     left:0;
     right:0;
@@ -36,7 +37,7 @@ ul {
 }
 /* ---------- search history ---------- */
 #left-column {
-    width: 30%;
+    max-width:30%;
     padding-right:20px;
     border-right:1px solid black;
 }
@@ -45,8 +46,13 @@ form {
     display:block;
 }
 
-#searchInput {
-    margin-bottom:20px;
+#searchButton {
+    margin-top:5px;
+    margin-bottom:0;
+}
+
+h3 {
+    margin-top:20px;
 }
 
 .btnHistory {
@@ -57,11 +63,14 @@ form {
 
 /* ---------- forecasts ---------- */
 #right-column {
-    width: 80%;
+    display:flex;
+    flex-wrap:wrap;
 }
 
 #oneDayCardEl {
-    display:block;
+    /* display:block; */
+    flex:1 0 100%;
+    width:100%;
     margin-bottom:20px;
 }
 
@@ -71,11 +80,14 @@ form {
 
 #fiveDayCardsEl {
     display:flex;
+    flex-wrap:wrap;
+    flex:0 0 100%;
     gap:10px;
 }
 
 .fiveDayCard {
     white-space:pre;
+    flex:1 0 auto;
     padding:10px;
     background-color:#80d0ff;
 }

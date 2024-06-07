@@ -91,8 +91,7 @@ function createFiveDayCards(fiveDayArr) {
 
     resultCard.classList.add("fiveDayCard")
     resultCard.id = i
-    cardTitle.textContent = `${searchCity}
-(${findDate(fiveDayArr[i])})`;
+    cardTitle.textContent = `${findDate(fiveDayArr[i])}`;
     cardIcon.setAttribute("src", `https://openweathermap.org/img/wn/${fiveDayArr[i].weather[0].icon}.png`)
     cityTemp.textContent = `Temp: ${fiveDayArr[i].main.temp}°`;
     cityHumidity.textContent = `Humidity: ${fiveDayArr[i].main.humidity}%`;
