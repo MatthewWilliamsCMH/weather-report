@@ -161,6 +161,7 @@ searchButton.addEventListener("click", function(event) {
   searchCity = document.querySelector("#searchInput").value;
   if (searchCity.trim()!== ""){
     writeHistory();
+    document.querySelector("#searchInput").value="";
     getLatLon(searchCity);
   } else {
     alert("Please provide a city name.")
