@@ -35,7 +35,7 @@ function getWeather(lat, lon){
     trimWeather(weatherData);
     oneDayArr = shortList[0];
     shortList.splice(0,1);
-    fiveDayArr = shortList
+    fiveDayArr = shortList.splice(0,5) // removes extra reading from last day if necessary
   
     // I would have liked to create all the cards in one function, but I ran out of time 
     // trying to make this work. Here, I settled for a less efficient solution.
@@ -159,12 +159,14 @@ searchButton.addEventListener("click", function(event) {
 
   // test below for content other than letter, period, hyphen.
   searchCity = document.querySelector("#searchInput").value;
-  if (searchCity.trim()!== ""){
+  if (searchCity.trim() !== "") {
+  // if (searchCity.trim() !== "" && weatherData.length != 0){
     writeHistory();
     document.querySelector("#searchInput").value="";
     getLatLon(searchCity);
   } else {
-    alert("Please provide a city name.")
+    document.querySelector("#searchInput").value="";
+    alert("Please provide a proper city name.")
     return;
   }
 });
