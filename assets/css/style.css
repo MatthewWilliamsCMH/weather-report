@@ -1,101 +1,110 @@
 /* ---------- globals ---------- */
 * {
-    font-family:"Alegreya", serif;
-    line-height:120%;
-    margin:0px;
+    font-family: "Alegreya", serif;
+    line-height: 120%;
+    margin: 0px;
 }
 
 body {
-    padding:0px 20px;
-    justify-items:center;
-    left:0;
-    right:0;
-    margin:20px auto;
-    max-width:980px;
-    background-color:hsl(324, 53%, 85%);
+    padding: 0px 20px;
+    justify-items: center;
+    left: 0;
+    right: 0;
+    margin: 20px auto;
+    max-width: 980px;
+    background-color: hsl(324, 53%, 85%);
 }
 
 h1 {
-    margin-bottom:20px;
-    border-bottom:1px solid black;
+    margin-bottom: 20px;
+    border-bottom: 1px solid black;
 }
 
 h2 {
-    text-transform:capitalize;
+    text-transform: capitalize;
 }
 
 main {
-    display:flex;
-    column-gap:20px;
+    display: flex;
+    column-gap: 20px;
 }
 
 ul {
-    list-style:none;
-    margin-left:0;
-    padding-left:0;
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0;
 
 }
 /* ---------- search history ---------- */
 #left-column {
-    max-width:30%;
-    padding-right:20px;
-    border-right:1px solid black;
+    max-width: 30%;
+    padding-right: 20px;
+    border-right: 1px solid black;
 }
 
 form {
-    display:inline-block;
-    white-space:nowrap;
+    display: inline-block;
+    white-space: nowrap;
 }
 
 #btn-search {
-    margin-top:5px;
-    margin-bottom:0;
+    margin-top: 5px;
+    margin-bottom: 0;
 }
 
 h3 {
-    margin-top:20px;
+    margin-top: 20px;
 }
 
 .btn-history {
-    display:block;
-    margin-bottom:5px;
-    text-transform:capitalize;
+    display: block;
+    margin-bottom: 5px;
+    text-transform: capitalize;
 }
 
 /* ---------- forecasts ---------- */
 #right-column {
-    display:flex;
-    flex-wrap:wrap;
-    align-self:flex-start;
+    display: flex;
+    flex-wrap: wrap;
+    align-self: flex-start;
 }
 
 #oneDayCardEl {
-    /* display:block; */
-    flex:1 0 100%;
-    width:100%;
-    margin-bottom:20px;
+    flex: 1 0 100%;
+    width: 100%;
+    margin-bottom: 20px;
 }
 
 .one-day-card  h2 {
-    color:#0066a1; 
+    color: #0066a1; 
 }
 
 #fiveDayCardsEl {
-    display:flex;
-    flex-wrap:wrap;
-    flex:0 0 100%;
-    gap:10px;
+    display: flex;
+    flex-wrap: wrap;
+    flex: 0 0 100%;
+    gap: 10px;
 }
 
 .fiveDayCard {
-    white-space:pre;
-    flex:1 0 auto;
-    padding:10px;
-    background-color:#80d0ff;
+    white-space: pre;
+    flex: 1 0 auto;
+    padding: 10px;
+    background-color: #80d0ff;
 }
 
 #fiveDayCardsEl h2 {
-    text-align:center;
-    font-size:95%;
-    text-transform:capitalize;
+    text-align: center;
+    font-size: 95%;
+    text-transform: capitalize;
+}
+
+@media screen and (max-width: 768px) {
+    form {
+        white-space: wrap;
+    }
+    
+    #iptSearchEl {
+        max-width: 105px;
+    }
 }

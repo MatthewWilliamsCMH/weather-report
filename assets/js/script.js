@@ -25,18 +25,18 @@ function getWeather (searchCity) {
     return forecastResponse.json();
   })
   .then (function (forecastObj) {
-    weatherData = forecastObj
+    weatherData = forecastObj;
     shortList = weatherData.list.filter(function (el, elIndex) {
       const reportInterval = weatherData.list[1].dt_txt.slice(-8);
-      const elDate = el.dt_txt.slice(0, el.dt_txt.length-9)
-      const index0Date = weatherData.list[0].dt_txt.slice(0, el.dt_txt.length-9)
-      return (elIndex === 0 || elIndex === 39) || (elDate !== index0Date && el.dt_txt.slice(-8) === reportInterval)})
+      const elDate = el.dt_txt.slice(0, el.dt_txt.length-9);
+      const index0Date = weatherData.list[0].dt_txt.slice(0, el.dt_txt.length-9);
+      return (elIndex === 0 || elIndex === 39) || (elDate !== index0Date && el.dt_txt.slice(-8) === reportInterval)});
 
       oneDayArr = shortList[0];
       shortList.splice (0,1);
-      fiveDayArr = shortList.splice (0,5) 
+      fiveDayArr = shortList.splice (0,5);
 
-      createFiveDayCards(fiveDayArr)
+      createFiveDayCards(fiveDayArr);
   })
   .catch (function (error) {
       alert("City not found. Check spelling or provide a larger city that is nearby.");
@@ -56,39 +56,39 @@ function getWeather (searchCity) {
   const cityWind = document.createElement ("li");
 
   cardTitle.textContent = `${searchCity} (${oneDayDate()})`;
-  cardIcon.setAttribute("src", `https://openweathermap.org/img/wn/${oneDayArr.weather[0].icon}.png`)
+  cardIcon.setAttribute("src", `https://openweathermap.org/img/wn/${oneDayArr.weather[0].icon}.png`);
   cityTemp.textContent = `Temp: ${oneDayArr.main.temp}°`;
   cityHumidity.textContent = `Humidity: ${oneDayArr.main.humidity}%`;
   cityWind.textContent = `Wind: ${oneDayArr.wind.speed} mph`;
 
-  dataList.appendChild(cityTemp)
-  dataList.appendChild(cityHumidity)
-  dataList.appendChild(cityWind)
+  dataList.appendChild(cityTemp);
+  dataList.appendChild(cityHumidity);
+  dataList.appendChild(cityWind);
   resultCard.append(cardTitle);
   resultCard.append(cardIcon);
-  resultCard.append(dataList)
+  resultCard.append(dataList);
 }
 
 function oneDayDate() {
-  const today = new Date().toLocaleDateString('en-us', {day:"numeric", month:"numeric", year:"numeric"})
+  const today = new Date().toLocaleDateString('en-us', {day:"numeric", month:"numeric", year:"numeric"});
   return today; 
 }
   
 function createFiveDayCards(fiveDayArr) {
   const resultCards = document.getElementById("fiveDayCardsEl");
   for (i = 0; i < fiveDayArr.length; i++) {
-    const resultCard = document.createElement("card")
+    const resultCard = document.createElement("card");
     const cardTitle = document.createElement("h2");
     const cardIcon = document.createElement("img");
-    const dataList = document.createElement("ul")
+    const dataList = document.createElement("ul");
     const cityTemp = document.createElement("li");
     const cityHumidity = document.createElement("li");
     const cityWind = document.createElement("li");
 
-    resultCard.classList.add("fiveDayCard")
-    resultCard.id = i
+    resultCard.classList.add("fiveDayCard");
+    resultCard.id = i;
     cardTitle.textContent = `${fiveDayDate(fiveDayArr[i], i)}`;
-    cardIcon.setAttribute("src", `https://openweathermap.org/img/wn/${fiveDayArr[i].weather[0].icon}.png`)
+    cardIcon.setAttribute("src", `https://openweathermap.org/img/wn/${fiveDayArr[i].weather[0].icon}.png`);
     cityTemp.textContent = `Temp: ${fiveDayArr[i].main.temp}°`;
     cityHumidity.textContent = `Humidity: ${fiveDayArr[i].main.humidity}%`;
     cityWind.textContent = `Wind: ${fiveDayArr[i].wind.speed} mph`;
@@ -104,11 +104,11 @@ function createFiveDayCards(fiveDayArr) {
 }
 
 function fiveDayDate(item, i) {
-  const dateStr = item.dt_txt
-  const dateParts = dateStr.split("-")
-  const trimmedDate = dateParts[2].slice(0, dateParts[2].length-9)
-  const cardDate = `${dateParts[1]}-${trimmedDate}-${dateParts[0]}`
-  return cardDate
+  const dateStr = item.dt_txt;
+  const dateParts = dateStr.split("-");
+  const trimmedDate = dateParts[2].slice(0, dateParts[2].length-9);
+  const cardDate = `${dateParts[1]}-${trimmedDate}-${dateParts[0]}`;
+  return cardDate;
 }
 
 function writeHistory() {
@@ -122,7 +122,7 @@ function writeHistory() {
 }
 
 function readHistory() {
-  document.getElementById("searchHistoryEl").innerHTML=""
+  document.getElementById("searchHistoryEl").innerHTML="";
 
   const cities = JSON.parse(localStorage.getItem("cityName")) || [];
 
@@ -138,9 +138,9 @@ function readHistory() {
     searchHistoryEl.appendChild(btnHistoryEl);
 
     btnHistoryEl.addEventListener("click", function(event) {
-      document.getElementById("oneDayCardEl").innerHTML=""
-      document.getElementById("fiveDayCardsEl").innerHTML=""
-      document.getElementById("iptSearchEl").innerHTML=""
+      document.getElementById("oneDayCardEl").innerHTML="";
+      document.getElementById("fiveDayCardsEl").innerHTML="";
+      document.getElementById("iptSearchEl").innerHTML="";
       searchCity = event.target.id;
       getWeather(searchCity)}
     );
@@ -148,10 +148,10 @@ function readHistory() {
 }
 
 btnSearchEl.addEventListener("click", function(event) {
-  event.preventDefault()
-  document.getElementById("oneDayCardEl").innerHTML=""
-  document.getElementById("fiveDayCardsEl").innerHTML=""
-  document.getElementById("iptSearchEl").innerHTML=""
+  event.preventDefault();
+  document.getElementById("oneDayCardEl").innerHTML="";
+  document.getElementById("fiveDayCardsEl").innerHTML="";
+  document.getElementById("iptSearchEl").innerHTML="";
 
   searchCity = document.querySelector("#iptSearchEl").value.trim();
     if (searchCity !== "") {
@@ -159,9 +159,9 @@ btnSearchEl.addEventListener("click", function(event) {
     document.querySelector("#iptSearchEl").value="";
   } else {
     document.querySelector("#iptSearchEl").value="";
-    alert("Please provide a proper city name.")
+    alert("Please provide a city name.");
     return;
   }
 });
 
-document.addEventListener("onload", readHistory())
+document.addEventListener("onload", readHistory());
