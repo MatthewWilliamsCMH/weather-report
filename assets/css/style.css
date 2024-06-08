@@ -43,7 +43,8 @@ ul {
 }
 
 form {
-    display:block;
+    display:inline-block;
+    white-space:nowrap;
 }
 
 #searchButton {
@@ -88,7 +89,7 @@ h3 {
 
 .fiveDayCard {
     white-space:pre;
-    flex:0 0 auto;
+    flex:1 0 auto;
     padding:10px;
     background-color:#80d0ff;
 }
