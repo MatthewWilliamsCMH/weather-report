@@ -1,58 +1,46 @@
-const searchButton = document.querySelector("#searchButton");
+// const Button = document.querySelector("#btnSearchEl");
 const oneDayForecast = document.querySelector("#oneDayCardEl");
 const fiveDayForecast = document.querySelector("#fiveDayCardEl")
 
 let searchCity=""
 let oneDayArr = [];
 let fiveDayArr = [];
-let weatherData = [];
+let forecasts = [];
 let shortList = [];
+let cityLat=""
+let cityLon=""
+let weatherData = [];
 
-function getLatLon(searchCity) {
-  fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${searchCity}&appid=671277334815afdc86042e04b061da17`, {
+function getWeather(searchCity) {
+  fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${searchCity}&appid=671277334815afdc86042e04b061da17`)
+  .then(function (coordinates) {
+    return coordinates.json();
   })
-  .then(function (response) {
-    return response.json();
+  .then(function (coordinatesObj) {
+    cityLat = coordinatesObj[0].lat;
+    cityLon = coordinatesObj[0].lon;
+    return fetch(`https:api.openweathermap.org/data/2.5/forecast?lat=${cityLat}&lon=${cityLon}&cnt=40&mode=json&units=imperial&appid=671277334815afdc86042e04b061da17`)
   })
-  .then(function(data) {
-    const cityLat = data[0].lat;
-    const cityLon = data[0].lon;
-    getWeather(cityLat, cityLon)
+  .then (function (forecastResponse) {
+    return forecastResponse.json();
   })
-  .catch(function(error) {
-    console.error('Error fetching data:', error);
+  .then (function (forecastObj) {
+    weatherData = forecastObj
+    shortList = weatherData.list.filter(function (el, elIndex) {
+      const reportInterval = weatherData.list[1].dt_txt.slice(-8);
+      const elDate = el.dt_txt.slice(0, el.dt_txt.length-9)
+      const index0Date = weatherData.list[0].dt_txt.slice(0, el.dt_txt.length-9)
+      return (elIndex === 0 || elIndex === 39) || (elDate !== index0Date && el.dt_txt.slice(-8) === reportInterval)})
   })
-}
 
-function getWeather(lat, lon){
-  fetch(`https:api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&cnt=40&mode=json&units=imperial&appid=671277334815afdc86042e04b061da17`, {
-  })
-  .then (function(response) {
-    return response.json();
-  })
-  .then (function(data) {
-    weatherData = data;
-    trimWeather(weatherData);
-    oneDayArr = shortList[0];
-    shortList.splice(0,1);
-    fiveDayArr = shortList.splice(0,5) // removes extra reading from last day if necessary
-  
-    // I would have liked to create all the cards in one function, but I ran out of time 
-    // trying to make this work. Here, I settled for a less efficient solution.
-    createOneDayCard(oneDayArr)
-    createFiveDayCards(fiveDayArr)
-  })
-  .catch (function (error) {
-    console.error("Error ", error);
-  })
-}
+  oneDayArr = shortList[0];
+  shortList.splice(0,1);
+  fiveDayArr = shortList.splice(0,5) // removes extra reading from last day if necessary
 
-function trimWeather(data) {
-  shortList = weatherData.list.filter(function(el, elIndex) {
-  const reportInterval = weatherData.list[1].dt_txt.slice(-8);
-  const elDate = el.dt_txt.slice(0, el.dt_txt.length-9)
-  const index0Date = weatherData.list[0].dt_txt.slice(0, el.dt_txt.length-9)
-  return (elIndex === 0 || elIndex === 39) || (elDate !== index0Date && el.dt_txt.slice(-8) === reportInterval)})
+  // I would have liked to create all the cards in one function, but I ran out of time 
+  // trying to make this work. Here, I settled for a less efficient solution.
+  createOneDayCard(oneDayArr)
+  createFiveDayCards(fiveDayArr)
 }
 
 function createOneDayCard(oneDayArr) {
@@ -116,10 +104,10 @@ function findDate(myArray, i) {
 }
 
 function writeHistory() {
-  storedCities = JSON.parse(localStorage.getItem("cityName")) || [];
-    if (!storedCities.includes(searchCity.toLowerCase(), 0)) {
-      storedCities.unshift(searchCity.toLowerCase());
-      localStorage.setItem("cityName", JSON.stringify(storedCities));
+  cities = JSON.parse(localStorage.getItem("cityName")) || [];
+    if (!cities.includes(searchCity.toLowerCase(), 0)) {
+      cities.unshift(searchCity.toLowerCase());
+      localStorage.setItem("cityName", JSON.stringify(cities));
       readHistory();
     // }
   }
@@ -128,44 +116,48 @@ function writeHistory() {
 function readHistory() {
   document.getElementById("searchHistoryEl").innerHTML=""
 
-  const storedCities = JSON.parse(localStorage.getItem("cityName")) || [];
+  const cities = JSON.parse(localStorage.getItem("cityName")) || [];
 
-  for (let city of storedCities) {
-    inputCity = city
-    const btn = document.createElement("button");
+  for (let city of cities) {
+    // inputCity = city
+    const btnHistoryEl = document.createElement("button");
     
-    btn.textContent = inputCity;
-    btn.id = inputCity;
-    btn.classList.add("btnHistory");
-    btn.setAttribute("type", "button");
+    btnHistoryEl.textContent = city;
+    btnHistoryEl.id = city;
 
-    searchHistoryEl.appendChild(btn);
+    // btn.textContent = inputCity;
+    // btn.id = inputCity;
+    btnHistoryEl.classList.add("btn-history");
+    btnHistoryEl.setAttribute("type", "button");
 
-    btn.addEventListener("click", function(event) {
+    searchHistoryEl.appendChild(btnHistoryEl);
+
+    btnHistoryEl.addEventListener("click", function(event) {
       document.getElementById("oneDayCardEl").innerHTML=""
       document.getElementById("fiveDayCardsEl").innerHTML=""
-      document.getElementById("searchInput").innerHTML=""
+      document.getElementById("iptSearchEl").innerHTML=""
       searchCity = event.target.id;
-      getLatLon(searchCity)}
+      getWeather(searchCity)}
     );
   }
 }
 
-searchButton.addEventListener("click", function(event) {
+btnSearchEl.addEventListener("click", function(event) {
   event.preventDefault()
   document.getElementById("oneDayCardEl").innerHTML=""
   document.getElementById("fiveDayCardsEl").innerHTML=""
-  document.getElementById("searchInput").innerHTML=""
+  document.getElementById("iptSearchEl").innerHTML=""
 
   // test below for content other than letter, period, hyphen.
-  searchCity = document.querySelector("#searchInput").value;
-  if (searchCity.trim() !== "") {
+  searchCity = document.querySelector("#iptSearchEl").value.trim();
+      if (searchCity !== "") {
+  // if (searchCity.trim() !== "") {
   // if (searchCity.trim() !== "" && weatherData.length != 0){
+    getWeather(searchCity);
     writeHistory();
-    document.querySelector("#searchInput").value="";
-    getLatLon(searchCity);
+    document.querySelector("#iptSearchEl").value="";
   } else {
-    document.querySelector("#searchInput").value="";
+    document.querySelector("#iptSearchEl").value="";
     alert("Please provide a proper city name.")
     return;
   }
