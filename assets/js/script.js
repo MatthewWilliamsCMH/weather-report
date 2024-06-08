@@ -1,4 +1,3 @@
-// const Button = document.querySelector("#btnSearchEl");
 const oneDayForecast = document.querySelector ("#oneDayCardEl");
 const fiveDayForecast = document.querySelector ("#fiveDayCardEl");
 
@@ -19,6 +18,7 @@ function getWeather (searchCity) {
     createOneDayCard (coordinatesObj);
     cityLat = coordinatesObj.coord.lat;
     cityLon = coordinatesObj.coord.lon;
+    writeHistory();
     return fetch (`https:api.openweathermap.org/data/2.5/forecast?lat=${cityLat}&lon=${cityLon}&cnt=40&mode=json&units=imperial&appid=671277334815afdc86042e04b061da17`)
   })
   .then (function (forecastResponse) {
@@ -37,6 +37,10 @@ function getWeather (searchCity) {
       fiveDayArr = shortList.splice (0,5) 
 
       createFiveDayCards(fiveDayArr)
+  })
+  .catch (function (error) {
+      alert("City not found. Check spelling or provide a larger city that is nearby.");
+      return;
   })
 };
 
@@ -68,10 +72,9 @@ function getWeather (searchCity) {
 function oneDayDate() {
   const today = new Date().toLocaleDateString('en-us', {day:"numeric", month:"numeric", year:"numeric"})
   return today; 
-  }
+}
   
 function createFiveDayCards(fiveDayArr) {
-  // console.log(fiveDayArr)
   const resultCards = document.getElementById("fiveDayCardsEl");
   for (i = 0; i < fiveDayArr.length; i++) {
     const resultCard = document.createElement("card")
@@ -124,14 +127,11 @@ function readHistory() {
   const cities = JSON.parse(localStorage.getItem("cityName")) || [];
 
   for (let city of cities) {
-    // inputCity = city
     const btnHistoryEl = document.createElement("button");
     
     btnHistoryEl.textContent = city;
     btnHistoryEl.id = city;
 
-    // btn.textContent = inputCity;
-    // btn.id = inputCity;
     btnHistoryEl.classList.add("btn-history");
     btnHistoryEl.setAttribute("type", "button");
 
@@ -153,13 +153,9 @@ btnSearchEl.addEventListener("click", function(event) {
   document.getElementById("fiveDayCardsEl").innerHTML=""
   document.getElementById("iptSearchEl").innerHTML=""
 
-  // test below for content other than letter, period, hyphen.
   searchCity = document.querySelector("#iptSearchEl").value.trim();
-      if (searchCity !== "") {
-  // if (searchCity.trim() !== "") {
-  // if (searchCity.trim() !== "" && weatherData.length != 0){
+    if (searchCity !== "") {
     getWeather(searchCity);
-    writeHistory();
     document.querySelector("#iptSearchEl").value="";
   } else {
     document.querySelector("#iptSearchEl").value="";
