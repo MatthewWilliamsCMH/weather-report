@@ -125,7 +125,9 @@ function readHistory() {
   document.getElementById("searchHistoryEl").innerHTML="";
 
   const cities = JSON.parse(localStorage.getItem("cityName")) || [];
-
+  if(cities.length > 10) {
+    cities.splice(9, cities.length-1) //limits search history to most recent 10 searches
+  }
   for (let city of cities) {
     const btnHistoryEl = document.createElement("button");
     
