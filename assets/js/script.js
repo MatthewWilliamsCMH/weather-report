@@ -19,7 +19,7 @@ function getWeather (searchCity) {
     cityLat = coordinatesObj.coord.lat;
     cityLon = coordinatesObj.coord.lon;
     writeHistory();
-    return fetch (`https:api.openweathermap.org/data/2.5/forecast?lat=${cityLat}&lon=${cityLon}&cnt=40&mode=json&units=imperial&appid=671277334815afdc86042e04b061da17`)
+    return fetch (`https://api.openweathermap.org/data/2.5/forecast?lat=${cityLat}&lon=${cityLon}&cnt=40&mode=json&units=imperial&appid=671277334815afdc86042e04b061da17`)
   })
   .then (function (forecastResponse) {
     return forecastResponse.json();
