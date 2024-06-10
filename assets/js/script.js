@@ -10,7 +10,7 @@ let shortList = [];
 let weatherData = [];
 
 function getWeather (searchCity) {
-  fetch (`http://api.openweathermap.org/data/2.5/weather?q=${searchCity}&units=imperial&appid=671277334815afdc86042e04b061da17`)
+  fetch (`https://api.openweathermap.org/data/2.5/weather?q=${searchCity}&units=imperial&appid=671277334815afdc86042e04b061da17`)
   .then (function (coordinates) {
     return coordinates.json();
   })
